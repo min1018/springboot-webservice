@@ -15,6 +15,7 @@ public class PostsResponseDto {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.author = entity.getAuthor();
+        this.content = entity.getContent();
 
     }
 }
