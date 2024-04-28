@@ -1,6 +1,5 @@
 package com.min1018.springbootproject.domain.user;
 
-import com.min1018.springbootproject.auth.dto.OAuthAttributes;
 import com.min1018.springbootproject.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;

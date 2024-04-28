@@ -1,7 +1,7 @@
-package com.min1018.springbootproject.auth;
+package com.min1018.springbootproject.config.auth;
 
-import com.min1018.springbootproject.auth.dto.OAuthAttributes;
-import com.min1018.springbootproject.auth.dto.SessionUser;
+import com.min1018.springbootproject.config.auth.dto.OAuthAttributes;
+import com.min1018.springbootproject.config.auth.dto.SessionUser;
 import com.min1018.springbootproject.domain.user.UserInfo;
 import com.min1018.springbootproject.domain.user.UserRepository;
 import jakarta.servlet.http.HttpSession;

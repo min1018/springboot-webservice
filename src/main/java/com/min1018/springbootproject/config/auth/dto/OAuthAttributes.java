@@ -1,4 +1,4 @@
-package com.min1018.springbootproject.auth.dto;
+package com.min1018.springbootproject.config.auth.dto;
 
 import com.min1018.springbootproject.domain.user.Role;
 import com.min1018.springbootproject.domain.user.UserInfo;
