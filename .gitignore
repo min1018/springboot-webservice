@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+application-oauth.properties
+#application-oauth.properties 파일이 깃허브에 올라가는 것 방지

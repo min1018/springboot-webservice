@@ -4,8 +4,10 @@ import com.min1018.springbootproject.domain.user.UserInfo;
 import lombok.Getter;
 import org.apache.catalina.User;
 
+import java.io.Serializable;
+
 @Getter
-public class SessionUser {
+public class SessionUser implements Serializable {
     private String name;
     private String email;
     private String picture;
