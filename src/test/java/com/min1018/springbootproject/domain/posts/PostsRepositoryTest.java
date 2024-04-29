@@ -1,11 +1,17 @@
 package com.min1018.springbootproject.domain.posts;
 
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+//import org.springframework.security.test.context.support.WithMockUser;
+
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,10 +19,23 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostsRepositoryTest {
     @Autowired
     PostsRepository postsRepository;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    private MockMvc mvc;
+
+//    @Before
+//    public void setup(){
+//        mvc = MockMvcBuilders
+//                .webAppContextSetup(context)
+//                .apply(springSecurity())
+//                .build();
+//    }
 
     @After(value = "execution(* com.test.controller.TestController.*(..))")
     public void cleanup() {
@@ -44,6 +63,7 @@ public class PostsRepositoryTest {
     }
 
     @Test
+//    @WithMockUser(roles = "USER")
     public void BaseTimeEntity_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2024, 4, 2, 0, 0);
