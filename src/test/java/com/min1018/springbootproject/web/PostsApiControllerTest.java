@@ -5,36 +5,30 @@ import com.min1018.springbootproject.domain.posts.Posts;
 import com.min1018.springbootproject.domain.posts.PostsRepository;
 import com.min1018.springbootproject.web.dto.PostsSaveRequestDto;
 import com.min1018.springbootproject.web.dto.PostsUpdateRequestDto;
-import org.apache.catalina.security.SecurityConfig;
-import org.aspectj.lang.annotation.After;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 
 import java.util.List;
 
@@ -43,13 +37,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@SpringBootTest
 @AutoConfigureMockMvc
+@WebMvcTest(PostsApiController.class)
 public class PostsApiControllerTest {
-    @LocalServerPort
+    @Value("${server.port}")
     private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private PostsRepository postsRepository;
@@ -67,10 +60,12 @@ public class PostsApiControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-    @After(value = "execution(* com.test.controller.TestController.*(..))")
+    //@After(value = "execution(* com.test.controller.TestController.*(..))")
+    @AfterEach
     public void tearDown() throws Exception {
         postsRepository.deleteAll();
     }
+
 
 
     @Test
@@ -85,7 +80,7 @@ public class PostsApiControllerTest {
                 .author("author")
                 .build();
         String url = "http://localhost:" + port + "/api/v1/posts";
-
+        //String url = "/api/v1/posts";
         //when
         String jsonContent = new ObjectMapper().writeValueAsString(requestDto);
         mvc.perform(post(url)
@@ -103,8 +98,6 @@ public class PostsApiControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void Posts_수정된다() throws Exception {
-
-
         //given
         Posts savedPosts = postsRepository.save(Posts.builder()
                 .title("title")
@@ -121,18 +114,24 @@ public class PostsApiControllerTest {
                 .content(expectedContent)
                 .build();
         String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
+        //String url = "/api/v1/posts/" + updateId;
 
+        System.out.println("print");
         //when
         // DTO 객체를 JSON 문자열로 변환하는 예제
         String jsonContent = new ObjectMapper().writeValueAsString(requestDto);
+        System.out.println("print"+jsonContent);
+
         mvc.perform(MockMvcRequestBuilders.put(url)
-                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(jsonContent))
                 .andExpect(status().isOk());
-
+        System.out.println("print"+jsonContent);
         //then
         List<Posts> all = postsRepository.findAll();
+        System.out.println("print" + all.get(0).getTitle() + all.get(0).getContent());
         assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
         assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
     }
+
 }
